@@ -1516,7 +1516,7 @@ void OFDParser::readOFD(std::string path) {
 					docinfo_data->creatorVersion = t.text().as_string();
 				if (!(t = new_docinfo.child("ofd:DocUsage")).isNull())
 					docinfo_data->docUsage = t.text().as_string();
-				//¶ÁÈ¡CustomsDatas
+				//è¯»å–CustomsDatas
 				if (!(t = new_docinfo.child("ofd:CustomDatas")).isNull()) {
 					xml_node t2 = t.child("ofd:CustomData");
 					while (!t2.isNull()) {
@@ -1741,7 +1741,7 @@ Document * OFDParser::readDocument(std::string path) {
 		readResource(st_loc_res.second, st_loc_res.first->abs);
 	}
 
-	//·ÃÎÊÒ³Ãæ
+	//è®¿é—®é¡µé¢
 	for (auto &st_loc_page : document_data->pages) {
 		st_loc_page.second = new Page();
 		st_loc_page.second->fromDoc = document_data;
@@ -1749,13 +1749,13 @@ Document * OFDParser::readDocument(std::string path) {
 		readPage(st_loc_page.second, st_loc_page.first->loc ? st_loc_page.first->loc->abs : st_loc_page.first->baseLoc->abs);
 	}
 
-	//·ÃÎÊÄ£°å
+	//è®¿é—®æ¨¡æ¿
 	for (std::pair<TemplatePage*, Page*> &st_loc_page : document_data->commonData->templatePages) {
 		st_loc_page.second = new Page();
 		readTemplatePage(st_loc_page.second, st_loc_page.first->baseLoc->abs);
 	}
 
-	//·ÃÎÊ×Ô¶¨Òå±êÇ©
+	//è®¿é—®è‡ªå®šä¹‰æ ‡ç­¾
 	if (document_data->customTags) {
 		//TODO
 	}
@@ -1956,7 +1956,7 @@ void OFDParser::readResource(Res * res_data, std::string path) {
 	xml_node new_res = document->child("ofd:Res");
 	if (!new_res.isNull())
 	{
-		//¶ÁÈ¡ÊôĞÔ
+		//è¯»å–å±æ€§
 		if (new_res.hasAttribute("BaseLoc"))
 		{
 			res_data->baseLoc = new ST_Loc();
@@ -1969,7 +1969,7 @@ void OFDParser::readResource(Res * res_data, std::string path) {
 			return;
 		}*/
 
-		//¶ÁÈ¡³ÉÔ±--font
+		//è¯»å–æˆå‘˜--font
 		xml_node t;
 		if (!(t = new_res.child("ofd:Fonts")).isNull())
 		{
@@ -2135,7 +2135,7 @@ void OFDParser::readTemplatePage(Page * page_data, std::string path) {
 				while (!t.isNull())
 				{
 
-					//½âÎöÎÄ×Ö¶ÔÏó
+					//è§£ææ–‡å­—å¯¹è±¡
 					bool is_first_textcode_x = true, is_first_textcode_y = true;
 					double last_x = 0.0, last_y = 0.0;
 
@@ -2242,7 +2242,7 @@ void OFDParser::readTemplatePage(Page * page_data, std::string path) {
 							t = t.next_sibling("ofd:TextObject");
 							continue;
 						}
-						//´¦ÀíCT_CGTransform
+						//å¤„ç†CT_CGTransform
 						auto *textcode_and_ct_cgtransform = new TextCode_And_CT_CGTransform();
 						xml_node tcgt = t.child("ofd:CGTransform");
 						while (!tcgt.isNull())
@@ -2381,7 +2381,7 @@ void OFDParser::readTemplatePage(Page * page_data, std::string path) {
 						layer_data->ct_pageBlock->d.push_back(std::make_pair(CT_PageBlock::TYPE::TEXTOBJECT, data));
 					}
 
-					//½âÎöÊ¸Á¿Í¼¶ÔÏó
+					//è§£æçŸ¢é‡å›¾å¯¹è±¡
 					//t = new_layer.child("ofd:PathObject");
 					if (std::string(t.name()).compare("ofd:PathObject") == 0)
 					{
@@ -2435,7 +2435,7 @@ void OFDParser::readTemplatePage(Page * page_data, std::string path) {
 							data->pathObject->ct_path->strokeColor->valueB = atof(strBox[2].c_str()) / 255.0f;
 						}
 
-						// Í¼ĞÎ±ä»»µÄÃèÊö
+						// å›¾å½¢å˜æ¢çš„æè¿°
 						if (!t.child("ofd:AbbreviatedData").isNull())
 						{
 							ST_Array strAbbreviatedData = t.child("ofd:AbbreviatedData").text().as_string();
@@ -2527,7 +2527,7 @@ void OFDParser::readTemplatePage(Page * page_data, std::string path) {
 						layer_data->ct_pageBlock->d.push_back(std::make_pair(CT_PageBlock::TYPE::PATHOBJECT, data));
 					}
 
-					//½âÎöÎ»Í¼¶ÔÏó
+					//è§£æä½å›¾å¯¹è±¡
 					// ImageObject
 
 					//t = new_layer.child("ofd:ImageObject");
@@ -2538,7 +2538,7 @@ void OFDParser::readTemplatePage(Page * page_data, std::string path) {
 						data->imageObject->id = t.attribute("ID").as_uint();
 						data->imageObject->ct_imageObject = new CT_Image();
 						data->imageObject->ct_imageObject->ct_graphicUnit = new CT_GraphicUnit();
-						readGraphicUnit(t, data->imageObject->ct_imageObject->ct_graphicUnit);             // ¶ÁÈ¡Í¼ÔªÀïµÄ¹²ÓÃµÄÊı¾İ
+						readGraphicUnit(t, data->imageObject->ct_imageObject->ct_graphicUnit);             // è¯»å–å›¾å…ƒé‡Œçš„å…±ç”¨çš„æ•°æ®
 						if (t.hasAttribute("ResourceID"))
 						{
 							data->imageObject->ct_imageObject->resourceID = t.attribute("ResourceID").as_int();
@@ -2694,7 +2694,7 @@ void OFDParser::readSignature(Signature * sig, std::string path)
 							val = r.child("ofd:CheckValue").text().as_string();
 						}
 						sig->signedInfo->references->references->insert(std::make_pair(fRef, val));
-						r = c.next_sibling("ofd:Reference");
+						r = r.next_sibling("ofd:Reference");
 					}
 				}
 				if (strcmp(c.name(), "ofd:StampAnnot") == 0)
@@ -2847,7 +2847,7 @@ void OFDParser::readPage(Page * page_data, std::string path) {
 				while (!t.isNull())
 				{
 					
-					//½âÎöÎÄ×Ö¶ÔÏó
+					//è§£ææ–‡å­—å¯¹è±¡
 					bool is_first_textcode_x = true, is_first_textcode_y = true;
 					double last_x = 0.0, last_y = 0.0;
 
@@ -2955,7 +2955,7 @@ void OFDParser::readPage(Page * page_data, std::string path) {
 							t = t.next_sibling("ofd:TextObject");
 							continue;
 						}
-						//´¦ÀíCT_CGTransform
+						//å¤„ç†CT_CGTransform
 						auto *textcode_and_ct_cgtransform = new TextCode_And_CT_CGTransform();
 						xml_node tcgt = t.child("ofd:CGTransform");
 						while (!tcgt.isNull())
@@ -3094,7 +3094,7 @@ void OFDParser::readPage(Page * page_data, std::string path) {
 						layer_data->ct_pageBlock->d.push_back(std::make_pair(CT_PageBlock::TYPE::TEXTOBJECT, data));
 					}
 
-					//½âÎöÊ¸Á¿Í¼¶ÔÏó
+					//è§£æçŸ¢é‡å›¾å¯¹è±¡
 					//t = new_layer.child("ofd:PathObject");
 					if (std::string(t.name()).compare("ofd:PathObject") == 0)
 					{
@@ -3152,7 +3152,7 @@ void OFDParser::readPage(Page * page_data, std::string path) {
 							data->pathObject->ct_path->strokeColor->valueB = atof(strBox[2].c_str()) / 255.0f;
 						}
 
-						// Í¼ĞÎ±ä»»µÄÃèÊö
+						// å›¾å½¢å˜æ¢çš„æè¿°
 						if (!t.child("ofd:AbbreviatedData").isNull())
 						{
 							ST_Array strAbbreviatedData = t.child("ofd:AbbreviatedData").text().as_string();
@@ -3244,7 +3244,7 @@ void OFDParser::readPage(Page * page_data, std::string path) {
 						layer_data->ct_pageBlock->d.push_back(std::make_pair(CT_PageBlock::TYPE::PATHOBJECT, data));
 					}
 
-					//½âÎöÎ»Í¼¶ÔÏó
+					//è§£æä½å›¾å¯¹è±¡
 					// ImageObject
 
 					//t = new_layer.child("ofd:ImageObject");
@@ -3255,7 +3255,7 @@ void OFDParser::readPage(Page * page_data, std::string path) {
 						data->imageObject->id = t.attribute("ID").as_uint();
 						data->imageObject->ct_imageObject = new CT_Image();
 						data->imageObject->ct_imageObject->ct_graphicUnit = new CT_GraphicUnit();
-						readGraphicUnit(t, data->imageObject->ct_imageObject->ct_graphicUnit);             // ¶ÁÈ¡Í¼ÔªÀïµÄ¹²ÓÃµÄÊı¾İ
+						readGraphicUnit(t, data->imageObject->ct_imageObject->ct_graphicUnit);             // è¯»å–å›¾å…ƒé‡Œçš„å…±ç”¨çš„æ•°æ®
 						if (t.hasAttribute("ResourceID"))
 						{
 							data->imageObject->ct_imageObject->resourceID = t.attribute("ResourceID").as_int();
